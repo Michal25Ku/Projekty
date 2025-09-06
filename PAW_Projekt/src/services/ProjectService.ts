@@ -1,5 +1,6 @@
 import type { Project } from "../models/Project.ts";
 import { StorageService } from "./StorageService.ts";
+import { StoryService } from "./StoryService.ts";
 
 const STORAGE_KEY = "projects";
 
@@ -32,6 +33,9 @@ export class ProjectService
 
     static delete(id: string): void 
     {
+      const relatedStories = StoryService.getByProject(id);
+      relatedStories.forEach(story => StoryService.delete(story.id));
+
       const projects = this.getAll().filter(p => p.id !== id);
       StorageService.set(STORAGE_KEY, projects);
     }
