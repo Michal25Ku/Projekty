@@ -3,10 +3,35 @@ import { useState, useEffect } from "react";
 import type { Project } from "../models/Project";
 import { ProjectService } from "../services/ProjectService";
 import "../index.css";
+import { ActiveProjectService } from "../services/ActiveProjectService";
 
 function ProjectNotFound()
 {
     return <p>Projekt nie znaleziony</p>;
+}
+
+function SaveButton({onClick}: {onClick: () => void})
+{
+    return (
+        <button
+        onClick={onClick}
+        className="button-save button"
+        >
+            Zapisz
+        </button>
+    );
+}
+
+function CancelButton({onClick}: {onClick: () => void})
+{
+    return (
+        <button
+        onClick={onClick}
+        className="button-save button"
+        >
+            Anuluj
+        </button>
+    );
 }
 
 export default function EditProject() 
@@ -21,8 +46,16 @@ export default function EditProject()
         {
             const found = ProjectService.getById(id);
             if (found) 
+            {
                 setProject(found);
+                ActiveProjectService.setActiveProject(found.id);
+            }
         }
+
+        return () => 
+        {
+            ActiveProjectService.clearActiveProject();
+        };
     }, [id]);
 
     const handleSave = () => 
@@ -39,7 +72,8 @@ export default function EditProject()
         }
     };
 
-    if (!project) return <ProjectNotFound />;
+    if (!project) 
+        return <ProjectNotFound />;
 
     return (
         <div className="p-6">
@@ -56,18 +90,8 @@ export default function EditProject()
             value={project.description}
             onChange={e => setProject({ ...project, description: e.target.value })}
             />
-            <button
-            onClick={handleSave}
-            className="button-save button"
-            >
-            Zapisz
-            </button>
-            <button
-            onClick={() => navigate("/")}
-            className="button-cancel button ml-2"
-            >
-            Anuluj
-            </button>
+            <SaveButton onClick={handleSave} />
+            <CancelButton onClick={() => navigate("/")} />
         </div>
         </div>
     );

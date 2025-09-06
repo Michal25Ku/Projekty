@@ -1,9 +1,21 @@
 import { useState, useEffect } from "react";
 import type { Project } from "../models/Project";
 import { ProjectService } from "../services/ProjectService";
+import { UserService } from "../services/UserService";
 import { v4 as uuid } from "uuid";
 import { Link } from "react-router-dom";
 import "../index.css";
+
+function CurrentUserDisplay({user}: {user: {name: string, surname: string}})
+{
+    return (
+        <div className="mb-4">
+            <p className="font-bold">
+            Zalogowany: {user.name} {user.surname}
+            </p>
+        </div>
+    );
+}
 
 function CreateButton({onClick}: {onClick: () => void})
 {
@@ -51,6 +63,8 @@ function ProjectRow({project, onDelete}: {project: Project, onDelete: (id: strin
 
 export default function Home() 
 {
+    const user = UserService.getCurrentUser();
+
     const [projects, setProjects] = useState<Project[]>([]);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -82,6 +96,7 @@ export default function Home()
     <div className="p-6">
         <h1 className="text-2xl mb-4">ManagMe</h1>
 
+        <CurrentUserDisplay user={user} />
         <div className="mb-4">
             <input
             className="border p-2 mr-2"
