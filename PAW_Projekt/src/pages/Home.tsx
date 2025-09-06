@@ -40,7 +40,7 @@ function EditButton({id}: {id: string})
     return (
         <Link
         className="button button-edit"
-        to={`/edit/${id}`}
+        to={`/project/${id}/edit`}
         >
             Edytuj
         </Link>

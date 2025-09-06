@@ -2,21 +2,22 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { Story } from "../models/Story";
 import { StoryService } from "../services/StoryService";
+import { TaskBoard } from "../components/TaskBoard";
 
 export default function EditStory() 
 {
-    const { id } = useParams<{ id: string }>();
+    const { storyId } = useParams<{ storyId: string }>();
     const navigate = useNavigate();
     const [story, setStory] = useState<Story | null>(null);
 
     useEffect(() => 
     {
-        if (id) 
+        if (storyId) 
         {
-            const found = StoryService.getById(id);
+            const found = StoryService.getById(storyId);
             if (found) setStory(found);
         }
-    }, [id]);
+    }, [storyId]);
 
     const handleSave = () => 
     {
@@ -29,7 +30,7 @@ export default function EditStory()
         }
 
         StoryService.update(story);
-        navigate(`/edit/${story.projectId}`);
+        navigate(`/project/${story.projectId}/edit`);
     };
 
     if (!story) return <p>Historyjka nie znaleziona</p>;
@@ -74,9 +75,12 @@ export default function EditStory()
                 <button onClick={handleSave} className="button button-save mr-2">
                     Zapisz
                 </button>
-                <button onClick={() => navigate(`/edit/${story.projectId}`)} className="button button-cancel">
+                <button onClick={() => navigate(`/project/${story.projectId}/edit`)} className="button button-cancel">
                     Anuluj
                 </button>
+            </div>
+            <div className="mb-4">                
+                    <TaskBoard storyId={story.id} />
             </div>
         </div>
     );

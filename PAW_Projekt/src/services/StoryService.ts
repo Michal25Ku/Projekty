@@ -1,5 +1,6 @@
 import { StorageService } from "./StorageService.ts";
 import type { Story } from "../models/Story.ts";
+import { TaskService } from "./TaskService.ts";
 
 const STORAGE_KEY = "stories";
 
@@ -37,6 +38,9 @@ export class StoryService
 
     static delete(id: string): void 
     {
+        const relatedTasks = TaskService.getByStory(id);
+        relatedTasks.forEach(task => TaskService.delete(task.id));
+
         const stories = this.getAll().filter(s => s.id !== id);
         StorageService.set(STORAGE_KEY, stories);
     }
