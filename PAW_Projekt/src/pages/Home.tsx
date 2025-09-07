@@ -1,51 +1,9 @@
 import { useState, useEffect } from "react";
 import type { Project } from "../models/Project";
 import { ProjectService } from "../services/ProjectService";
-import { UserService } from "../services/UserService";
 import { v4 as uuid } from "uuid";
 import { Link } from "react-router-dom";
 import "../index.css";
-
-function CurrentUserDisplay({user}: {user: {name: string, surname: string}})
-{
-    return (
-        <div className="mb-4">
-            <p className="font-bold">
-            Zalogowany: {user.name} {user.surname}
-            </p>
-        </div>
-    );
-}
-
-function CreateButton({onClick}: {onClick: () => void})
-{
-    return (
-        <button onClick={onClick} className="button button-create">
-            Utwórz
-        </button>
-    );
-}
-
-function DeleteButton({onClick}: { onClick: () => void })
-{
-    return (
-        <button onClick={onClick} className="button button-delete">
-            Usuń
-        </button>
-    );
-}
-
-function EditButton({id}: {id: string})
-{
-    return (
-        <Link
-        className="button button-edit"
-        to={`/project/${id}/edit`}
-        >
-            Edytuj
-        </Link>
-    );
-}
 
 function ProjectRow({project, onDelete}: {project: Project, onDelete: (id: string) => void})
 {
@@ -54,8 +12,15 @@ function ProjectRow({project, onDelete}: {project: Project, onDelete: (id: strin
             <td className="border p-2">{project.name}</td>
             <td className="border p-2">{project.description}</td>
             <td className="border p-2">
-                <EditButton id={project.id} />
-                <DeleteButton onClick={() => onDelete(project.id)} />
+                <Link
+                className="button button-edit"
+                to={`/project/edit/${project.id}`}
+                >
+                    Edytuj
+                </Link>
+                <button onClick={() => onDelete(project.id)} className="button button-delete">
+                    Usuń
+                </button>
             </td>
         </tr>
     );
@@ -63,8 +28,6 @@ function ProjectRow({project, onDelete}: {project: Project, onDelete: (id: strin
 
 export default function Home() 
 {
-    const user = UserService.getCurrentUser();
-
     const [projects, setProjects] = useState<Project[]>([]);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -96,7 +59,6 @@ export default function Home()
     <div className="p-6">
         <h1 className="text-2xl mb-4">ManagMe</h1>
 
-        <CurrentUserDisplay user={user} />
         <div className="mb-4">
             <input
             className="border p-2 mr-2"
@@ -110,7 +72,9 @@ export default function Home()
             value={description}
             onChange={e => setDescription(e.target.value)}
             />
-            <CreateButton onClick={handleCreate} />
+            <button onClick={handleCreate} className="button button-create">
+                Utwórz
+            </button>
       </div>
 
       <table className="border-collapse border w-full">

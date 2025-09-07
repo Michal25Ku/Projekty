@@ -9,9 +9,9 @@ export default function App()
     return (
         <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/project/:projectId/edit" element={<EditProject />} />
-        <Route path="/project/:projectId/story/:storyId/edit" element={<EditStory />} />
-        <Route path="/project/:projectId/task/:taskId/edit" element={<EditTask />} />
+        <Route path="/project/edit/:projectId" element={<EditProject />} />
+        <Route path="/project/:projectId/story/edit/:storyId" element={<EditStory />} />
+        <Route path="/project/:projectId/story/:storyId/task/edit/:taskId" element={<EditTask />} />
         </Routes>
     );
 }

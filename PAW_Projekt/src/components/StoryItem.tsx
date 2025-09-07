@@ -19,7 +19,7 @@ export function StoryItem({ story, onDelete }: StoryItemProps)
         <div className="mt-2 flex gap-2">
             <button
             className="button button-edit"
-            onClick={() => navigate(`/project/${story.projectId}/story/${story.id}/edit`)}
+            onClick={() => navigate(`/project/${story.projectId}/story/edit/${story.id}`)}
             >
             Edytuj
             </button>

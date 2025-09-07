@@ -12,7 +12,7 @@ interface TaskItemProps
 export function TaskItem({ task, onDelete }: TaskItemProps) 
 {
     const navigate = useNavigate();
-    const { projectId } = useParams<{ projectId: string }>();
+    const { projectId, storyId } = useParams<{ projectId: string, storyId: string }>();
 
     return (
         <div key={task.id} className="border p-2 mb-2 rounded bg-white shadow">
@@ -32,7 +32,7 @@ export function TaskItem({ task, onDelete }: TaskItemProps)
             <div className="mt-2 flex gap-2">
                 <button
                 className="button button-edit"
-                onClick={() => navigate(`/project/${projectId}/task/${task.id}/edit`)}
+                onClick={() => navigate(`/project/${projectId}/story/${storyId}/task/edit/${task.id}`)}
                 >
                     Szczegóły
                 </button>

@@ -19,7 +19,8 @@ export default function EditTask()
         if (taskId) 
         {
             const found = TaskService.getById(taskId);
-            if (found) setTask(found);
+            if (found) 
+                setTask(found);
         }
         setUsers(UserService.getAll().filter(u => u.role !== "admin"));
     }, [taskId]);
@@ -47,10 +48,6 @@ export default function EditTask()
             status: "done",
             endDate: new Date().toISOString(),
         });
-
-        TaskService.update(task);
-
-        navigate(`/project/${projectId}/story/${task.storyId}/edit`);
     };
 
     const handleSave = () => 
@@ -60,7 +57,7 @@ export default function EditTask()
 
         TaskService.update(task);
 
-        navigate(`/project/${projectId}/story/${task.storyId}/edit`);
+        navigate(`/project/${projectId}/story/edit/${task.storyId}`);
     };
 
     if (!task) return <p>Zadanie nie znalezione</p>;
@@ -105,7 +102,7 @@ export default function EditTask()
                 <button className="button button-save mr-2" onClick={handleSave}>
                     Zapisz
                 </button>
-                <button className="button button-cancel" onClick={() => navigate(`/project/${projectId}/story/${task.storyId}/edit`)}>
+                <button className="button button-cancel" onClick={() => navigate(`/project/${projectId}/story/edit/${task.storyId}`)}>
                     Anuluj
                 </button>
             </div>

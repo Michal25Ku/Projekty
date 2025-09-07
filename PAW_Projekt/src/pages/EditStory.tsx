@@ -30,7 +30,7 @@ export default function EditStory()
         }
 
         StoryService.update(story);
-        navigate(`/project/${story.projectId}/edit`);
+        navigate(`/project/edit/${story.projectId}`);
     };
 
     if (!story) return <p>Historyjka nie znaleziona</p>;
@@ -75,7 +75,7 @@ export default function EditStory()
                 <button onClick={handleSave} className="button button-save mr-2">
                     Zapisz
                 </button>
-                <button onClick={() => navigate(`/project/${story.projectId}/edit`)} className="button button-cancel">
+                <button onClick={() => navigate(`/project/edit/${story.projectId}`)} className="button button-cancel">
                     Anuluj
                 </button>
             </div>
