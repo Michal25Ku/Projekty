@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
-import { v4 as uuid } from "uuid";
 import type { Task, TaskStatus, TaskPriority } from "../models/Task";
-import { TaskService } from "../services/TaskService";
 import { TaskItem } from "./TaskItem";
+import * as TaskApi from "../api/TaskApi";
 
-interface TaskBoardProps 
-{
+interface TaskBoardProps {
     storyId: string;
 }
 
-export function TaskBoard({ storyId }: TaskBoardProps) 
-{
+export function TaskBoard({ storyId }: TaskBoardProps) {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -18,22 +15,26 @@ export function TaskBoard({ storyId }: TaskBoardProps)
     const [estimatedTime, setEstimatedTime] = useState<number>(1);
     const [assignedUser, setAssignedUser] = useState<string>("");
 
-    useEffect(() => 
-    {
-        setTasks(TaskService.getByStory(storyId));
+    // Pobranie zadań z backendu
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const data = await TaskApi.getAllTasks(storyId);
+                setTasks(data);
+            } catch (error) {
+                console.error("Nie udało się pobrać zadań:", error);
+            }
+        };
+        fetchTasks();
     }, [storyId]);
 
-   const handleAddTask = () => 
-    {
-        if (!name.trim()) 
-        {
+    const handleAddTask = async () => {
+        if (!name.trim()) {
             alert("Pole 'Nazwa zadania' jest wymagane!");
             return;
         }
 
-        const newTask: Task = 
-        {
-            id: uuid(),
+        const newTask: Partial<Task> = {
             name,
             description,
             priority,
@@ -41,33 +42,41 @@ export function TaskBoard({ storyId }: TaskBoardProps)
             estimatedExecutionTime: estimatedTime,
             status: "todo",
             addDate: new Date().toISOString(),
-            userId: assignedUser,
+            userId: assignedUser || undefined,
         };
 
-        TaskService.create(newTask);
-        setTasks(TaskService.getByStory(storyId));
+        try {
+            await TaskApi.createTask(newTask as Task);
+            const updatedTasks = await TaskApi.getAllTasks(storyId);
+            setTasks(updatedTasks);
 
-        setName("");
-        setDescription("");
-        setPriority("średni");
-        setEstimatedTime(1);
-        setAssignedUser("");
+            setName("");
+            setDescription("");
+            setPriority("średni");
+            setEstimatedTime(1);
+            setAssignedUser("");
+        } catch (error) {
+            console.error("Nie udało się dodać zadania:", error);
+        }
     };
 
-    const handleDeleteTask = (id: string) => 
-    {
-        TaskService.delete(id);
-        setTasks(TaskService.getByStory(storyId));
+    const handleDeleteTask = async (id: string) => {
+        try {
+            await TaskApi.deleteTask(id);
+            const updatedTasks = await TaskApi.getAllTasks(storyId);
+            setTasks(updatedTasks);
+        } catch (error) {
+            console.error("Nie udało się usunąć zadania:", error);
+        }
     };
 
-    const renderColumn = (status: TaskStatus, title: string) => 
-    (
+    const renderColumn = (status: TaskStatus, title: string) => (
         <div>
             <h3 className="font-bold mb-2">{title}</h3>
             {tasks
                 .filter(t => t.status === status)
                 .map(t => (
-                    <TaskItem key={t.id} task={t} onDelete={handleDeleteTask} />
+                    <TaskItem key={t._id} task={t} onDelete={handleDeleteTask} />
                 ))}
         </div>
     );
@@ -99,7 +108,7 @@ export function TaskBoard({ storyId }: TaskBoardProps)
                 </select>
                 <input
                     type="number"
-                    min="1"
+                    min={1}
                     className="border p-2 mr-2 w-32"
                     value={estimatedTime}
                     onChange={(e) => setEstimatedTime(Number(e.target.value))}

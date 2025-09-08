@@ -3,7 +3,7 @@ export type TaskPriority = "niski" | "średni" | "wysoki";
 
 export interface Task 
 {
-    id: string;
+    _id?: string;
     name: string;
     description: string;
     priority: TaskPriority;

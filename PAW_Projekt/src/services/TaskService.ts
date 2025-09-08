@@ -12,7 +12,7 @@ export class TaskService
 
     static getById(id: string): Task | undefined 
     {
-        return this.getAll().find(t => t.id === id);
+        return this.getAll().find(t => t._id === id);
     }
 
     static getByStory(storyId: string): Task[] 
@@ -30,14 +30,14 @@ export class TaskService
     static update(updatedTask: Task): void 
     {
         const tasks = this.getAll().map(t =>
-            t.id === updatedTask.id ? updatedTask : t
+            t._id === updatedTask._id ? updatedTask : t
         );
         StorageService.set(STORAGE_KEY, tasks);
     }
 
     static delete(id: string): void 
     {
-        const tasks = this.getAll().filter(t => t.id !== id);
+        const tasks = this.getAll().filter(t => t._id !== id);
         StorageService.set(STORAGE_KEY, tasks);
     }
 }

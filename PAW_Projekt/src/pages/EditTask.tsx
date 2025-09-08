@@ -1,68 +1,69 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { Task } from "../models/Task";
-import { TaskService } from "../services/TaskService";
-import { StoryService } from "../services/StoryService";
-import { UserService } from "../services/UserService";
 import type { User } from "../models/User";
+import type { Story } from "../models/Story";
 import { formatDate } from "../helpers/DateHelper";
 
-export default function EditTask() 
-{
-    const { projectId, taskId } = useParams<{ projectId: string, taskId: string }>();
+import * as TaskApi from "../api/TaskApi";
+import * as UserApi from "../api/UserApi";
+import * as StoryApi from "../api/StoryApi";
+
+export default function EditTask() {
+    const { projectId, taskId } = useParams<{ projectId: string; taskId: string }>();
     const navigate = useNavigate();
+
     const [task, setTask] = useState<Task | null>(null);
     const [users, setUsers] = useState<User[]>([]);
+    const [story, setStory] = useState<Story | null>(null);
 
-    useEffect(() => 
-    {
-        if (taskId) 
-        {
-            const found = TaskService.getById(taskId);
-            if (found) 
-                setTask(found);
-        }
-        setUsers(UserService.getAll().filter(u => u.role !== "admin"));
+    // Pobranie zadania, użytkowników i story
+    useEffect(() => {
+        const fetchData = async () => {
+            if (taskId) {
+                const t = await TaskApi.getByIdTask(taskId);
+                setTask(t);
+
+                const s = await StoryApi.getByIdStory(t.storyId);
+                setStory(s);
+            }
+
+            const allUsers = await UserApi.getAllUsers();
+            setUsers(allUsers.filter(u => u.role !== "admin"));
+        };
+        fetchData();
     }, [taskId]);
 
-    const handleAssignUser = (userId: string) => 
-    {
+    // Przypisanie użytkownika
+    const handleAssignUser = (userId: string) => {
         if (!task) return;
-        setTask(
-        {
+        setTask({
             ...task,
             userId,
             status: "doing",
-            startDate: new Date().toISOString(),
+            startDate: task.startDate ?? new Date().toISOString(),
         });
     };
 
-    const handleMarkDone = () => 
-    {
-        if (!task) 
-            return;
-
-        setTask(
-        {
+    // Oznaczenie jako zrobione
+    const handleMarkDone = () => {
+        if (!task) return;
+        setTask({
             ...task,
             status: "done",
             endDate: new Date().toISOString(),
         });
     };
 
-    const handleSave = () => 
-    {
-        if (!task) 
-            return;
+    // Zapis zmian do backendu
+    const handleSave = async () => {
+        if (!task) return;
 
-        TaskService.update(task);
-
+        await TaskApi.updateTask(task._id!, task);
         navigate(`/project/${projectId}/story/edit/${task.storyId}`);
     };
 
     if (!task) return <p>Zadanie nie znalezione</p>;
-
-    const story = StoryService.getById(task.storyId);
 
     return (
         <div className="p-6">
@@ -76,17 +77,22 @@ export default function EditTask()
             <p><b>Data dodania:</b> {formatDate(task.addDate) ?? "-"}</p>
             <p><b>Data startu:</b> {formatDate(task.startDate) ?? "-"}</p>
             <p><b>Data zakończenia:</b> {formatDate(task.endDate) ?? "-"}</p>
-            <p><b>Przypisana osoba:</b> {task.userId 
-                ? `${UserService.getById(task.userId)?.name} ${UserService.getById(task.userId)?.surname}` 
-                : "-"}</p>
+            <p><b>Przypisana osoba:</b> {task.userId
+                ? (() => {
+                    const u = users.find(u => u._id === task.userId);
+                    return u ? `${u.name} ${u.surname}` : "-";
+                  })()
+                : "-"
+            }</p>
+
             <select
-            className="border p-2 mr-2"
-            onChange={(e) => handleAssignUser(e.target.value)}
-            value={task.userId ?? ""}
+                className="border p-2 mr-2"
+                onChange={(e) => handleAssignUser(e.target.value)}
+                value={task.userId ?? ""}
             >
                 <option value="">-- przypisz użytkownika --</option>
                 {users.map(u => (
-                    <option key={u.id} value={u.id}>
+                    <option key={u._id} value={u._id}>
                         {u.name} {u.surname} ({u.role})
                     </option>
                 ))}

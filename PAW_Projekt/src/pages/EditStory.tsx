@@ -1,36 +1,47 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { Story } from "../models/Story";
-import { StoryService } from "../services/StoryService";
 import { TaskBoard } from "../components/TaskBoard";
 
-export default function EditStory() 
-{
+import * as StoryApi from "../api/StoryApi";
+
+export default function EditStory() {
     const { storyId } = useParams<{ storyId: string }>();
     const navigate = useNavigate();
     const [story, setStory] = useState<Story | null>(null);
 
-    useEffect(() => 
-    {
-        if (storyId) 
-        {
-            const found = StoryService.getById(storyId);
-            if (found) setStory(found);
-        }
+    // Pobranie historyjki z backendu
+    useEffect(() => {
+        const fetchStory = async () => {
+            if (storyId) {
+                try {
+                    const s = await StoryApi.getByIdStory(storyId);
+                    setStory(s);
+                } catch (error) {
+                    console.error(error);
+                    alert("Nie udało się pobrać historyjki!");
+                }
+            }
+        };
+        fetchStory();
     }, [storyId]);
 
-    const handleSave = () => 
-    {
+    // Zapis zmian do backendu
+    const handleSave = async () => {
         if (!story) return;
 
-        if (!story.name.trim()) 
-        {
+        if (!story.name.trim()) {
             alert("Pole 'Nazwa historyjki' jest wymagane!");
             return;
         }
 
-        StoryService.update(story);
-        navigate(`/project/edit/${story.projectId}`);
+        try {
+            await StoryApi.updateStory(story._id!, story);
+            navigate(`/project/edit/${story.projectId}`);
+        } catch (error) {
+            console.error(error);
+            alert("Nie udało się zapisać historyjki!");
+        }
     };
 
     if (!story) return <p>Historyjka nie znaleziona</p>;
@@ -57,16 +68,16 @@ export default function EditStory()
                         setStory({ ...story, priority: e.target.value as "niski" | "średni" | "wysoki" })
                     }
                 >
-                    <option value="low">Niski</option>
-                    <option value="medium">Średni</option>
-                    <option value="high">Wysoki</option>
+                    <option value="niski">Niski</option>
+                    <option value="średni">Średni</option>
+                    <option value="wysoki">Wysoki</option>
                 </select>
                 <select
-                className="border p-2 mr-2"
-                value={story.status}
-                onChange={(e) =>
-                setStory({ ...story, status: e.target.value as "todo" | "doing" | "done" })
-                }
+                    className="border p-2 mr-2"
+                    value={story.status}
+                    onChange={(e) =>
+                        setStory({ ...story, status: e.target.value as "todo" | "doing" | "done" })
+                    }
                 >
                     <option value="todo">Todo</option>
                     <option value="doing">Doing</option>
@@ -79,8 +90,10 @@ export default function EditStory()
                     Anuluj
                 </button>
             </div>
-            <div className="mb-4">                
-                    <TaskBoard storyId={story.id} />
+
+            <div className="mb-4">
+                {/* TaskBoard korzysta z MongoDB _id */}
+                {story._id && <TaskBoard storyId={story._id} />}
             </div>
         </div>
     );

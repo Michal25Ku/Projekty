@@ -2,7 +2,7 @@ export type UserRole = "admin" | "devops" | "developer";
 
 export interface User 
 {
-    id: string;
+    _id?: string;
     name: string;
     surname: string;
     role: UserRole;

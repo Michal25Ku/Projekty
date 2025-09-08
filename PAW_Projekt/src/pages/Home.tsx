@@ -1,24 +1,23 @@
 import { useState, useEffect } from "react";
 import type { Project } from "../models/Project";
-import { ProjectService } from "../services/ProjectService";
-import { v4 as uuid } from "uuid";
+import { getAllProjects, createProject, deleteProject } from "../api/ProjectApi";
 import { Link } from "react-router-dom";
 import "../index.css";
 
 function ProjectRow({project, onDelete}: {project: Project, onDelete: (id: string) => void})
 {
     return (
-        <tr key={project.id}>
+        <tr key={project._id}>
             <td className="border p-2">{project.name}</td>
             <td className="border p-2">{project.description}</td>
             <td className="border p-2">
                 <Link
                 className="button button-edit"
-                to={`/project/edit/${project.id}`}
+                to={`/project/edit/${project._id}`}
                 >
                     Edytuj
                 </Link>
-                <button onClick={() => onDelete(project.id)} className="button button-delete">
+                <button onClick={() => onDelete(project._id!)} className="button button-delete">
                     Usuń
                 </button>
             </td>
@@ -32,7 +31,11 @@ export default function Home()
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
 
-    useEffect(() => {setProjects(ProjectService.getAll());}, []);
+    useEffect(() => {getAllProjects().then(data =>
+        {
+            setProjects(data);
+        });
+    }, []);
 
     const handleCreate = () => 
     {
@@ -42,17 +45,24 @@ export default function Home()
             return;
         }
 
-        ProjectService.create({ id: uuid(), name, description });
+        createProject({ name, description });
 
-        setProjects(ProjectService.getAll());
+        getAllProjects().then(data =>
+        {
+            setProjects(data);
+        });
+
         setName("");
         setDescription("");
     };
 
     const handleDelete = (id: string) => 
     {
-        ProjectService.delete(id);
-        setProjects(ProjectService.getAll());
+        deleteProject(id);
+        getAllProjects().then(data =>
+        {
+            setProjects(data);
+        });
     };
 
     return (
@@ -87,7 +97,7 @@ export default function Home()
             </thead>
             <tbody>
                 {projects.map(project => (
-                    <ProjectRow key={project.id} project={project} onDelete={handleDelete} />
+                    <ProjectRow key={project._id} project={project} onDelete={handleDelete} />
                 ))}
             </tbody>
         </table>

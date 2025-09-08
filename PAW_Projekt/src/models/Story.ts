@@ -3,7 +3,7 @@ export type StoryPriority = "niski" | "średni" | "wysoki";
 
 export interface Story 
 {
-  id: string;
+  _id?: string;
   name: string;
   description: string;
   priority: StoryPriority;
