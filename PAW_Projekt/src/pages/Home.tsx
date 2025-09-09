@@ -1,106 +1,80 @@
 import { useState, useEffect } from "react";
 import type { Project } from "../models/Project";
-import { getAllProjects, createProject, deleteProject } from "../api/ProjectApi";
-import { Link } from "react-router-dom";
+import { ProjectApi } from "../api/ProjectApi";
 import "../index.css";
-
-function ProjectRow({project, onDelete}: {project: Project, onDelete: (id: string) => void})
-{
-    return (
-        <tr key={project._id}>
-            <td className="border p-2">{project.name}</td>
-            <td className="border p-2">{project.description}</td>
-            <td className="border p-2">
-                <Link
-                className="button button-edit"
-                to={`/project/edit/${project._id}`}
-                >
-                    Edytuj
-                </Link>
-                <button onClick={() => onDelete(project._id!)} className="button button-delete">
-                    Usuń
-                </button>
-            </td>
-        </tr>
-    );
-}
+import { ProjectCreateForm } from "../components/projectComponents/ProjectCreateForm";
+import { ProjectList } from "../components/projectComponents/ProjectList";
 
 export default function Home() 
 {
     const [projects, setProjects] = useState<Project[]>([]);
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
 
-    useEffect(() => {getAllProjects().then(data =>
-        {
-            setProjects(data);
-        });
-    }, []);
-
-    const handleCreate = () => 
+    useEffect(() =>
     {
-        if (!name.trim()) 
+        const fetchProject= async () =>
         {
-            alert("Pole 'Nazwa projektu' jest wymagane!");
-            return;
+            try
+            {
+                const founds = await ProjectApi.getAll();
+                setProjects(founds);
+            }
+            catch (err)
+            {
+                console.error("Błąd podczas pobierania projektu:", err);
+            }
         }
 
-        createProject({ name, description });
+        fetchProject();
+    }, []);
 
-        getAllProjects().then(data =>
+    const handleDelete = async (id: string) => 
+    {
+        try 
         {
-            setProjects(data);
-        });
-
-        setName("");
-        setDescription("");
+            await ProjectApi.delete(id);
+            const updatedProjects = await ProjectApi.getAll();
+            setProjects(updatedProjects);
+        } 
+        catch (err) 
+        {
+            console.error("Błąd podczas usuwania projektu:", err);
+        }
     };
 
-    const handleDelete = (id: string) => 
+    const handleCreate = async (project: Project) => 
     {
-        deleteProject(id);
-        getAllProjects().then(data =>
+        try 
         {
-            setProjects(data);
-        });
+            await ProjectApi.create(project);
+            const updatedProjects = await ProjectApi.getAll();
+            setProjects(updatedProjects);
+        } 
+        catch (err) 
+        {
+            console.error("Błąd podczas dodawania projektu:", err);
+        }
+    };
+
+    const handleEdit = async (id: string, project: Project) => 
+    {
+        try 
+        {
+            await ProjectApi.update(id, project);
+            const updatedProjects = await ProjectApi.getAll();
+            setProjects(updatedProjects);
+        } 
+        catch (err) 
+        {
+            console.error("Błąd podczas edytowania projektu:", err);
+        }
     };
 
     return (
     <div className="p-6">
         <h1 className="text-2xl mb-4">ManagMe</h1>
+        <ProjectCreateForm onCreate={handleCreate}/>
 
-        <div className="mb-4">
-            <input
-            className="border p-2 mr-2"
-            placeholder="Nazwa projektu"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            />
-            <input
-            className="border p-2 mr-2"
-            placeholder="Opis projektu"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            />
-            <button onClick={handleCreate} className="button button-create">
-                Utwórz
-            </button>
-      </div>
-
-      <table className="border-collapse border w-full">
-            <thead>
-            <tr>
-                <th className="border p-2">Nazwa</th>
-                <th className="border p-2">Opis</th>
-                <th className="border p-2"></th>
-            </tr>
-            </thead>
-            <tbody>
-                {projects.map(project => (
-                    <ProjectRow key={project._id} project={project} onDelete={handleDelete} />
-                ))}
-            </tbody>
-        </table>
+        <ProjectList projects={projects} onDelete={handleDelete} />
     </div>
   );
 }
