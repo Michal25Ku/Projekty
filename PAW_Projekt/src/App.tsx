@@ -1,17 +1,23 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import EditProject from "./pages/EditProject";
-import EditStory from "./pages/EditStory";
-import EditTask from "./pages/EditTask";
+import HomePage from "./pages/HomePage";
+import TaskPage from "./pages/TaskPage";
+import StoryPage from "./pages/StoryPage";
+import { useEffect } from "react";
+import { initAdminUser } from "./helpers/MockUser";
 
 export default function App() 
 {
+    useEffect(() => 
+    {
+        initAdminUser();
+    }, []);
+
     return (
         <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/project/edit/:projectId" element={<EditProject />} />
-        <Route path="/project/:projectId/story/edit/:storyId" element={<EditStory />} />
-        <Route path="/project/:projectId/story/:storyId/task/edit/:taskId" element={<EditTask />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/project" element={<HomePage />} />
+            <Route path="/project/:projectId/story" element={<StoryPage />} />
+            <Route path="/project/:projectId/story/:storyId/task" element={<TaskPage />} />
         </Routes>
     );
 }

@@ -3,8 +3,35 @@ import type { Story } from '../models/Story';
 
 const API_URL = 'http://localhost:5000/api/stories';
 
-export const getAllStories = async (projectId: string) => (await axios.get<Story[]>(`${API_URL}?project=${projectId}`)).data;
-export const getByIdStory = async (id: string) => (await axios.get<Story>(`${API_URL}/${id}`)).data;
-export const createStory = async (story: Story) => (await axios.post<Story>(API_URL, story)).data;
-export const updateStory = async (id: string, story: Story) => (await axios.put<Story>(`${API_URL}/${id}`, story)).data;
-export const deleteStory = async (id: string) => (await axios.delete(`${API_URL}/${id}`)).data;
+export class StoryApi
+{
+    static async getAll(): Promise<Story[]>
+    {
+        return (await axios.get<Story[]>(API_URL)).data;
+    }
+
+    static async getByProject(projectId: string): Promise<Story[]> 
+    {
+        return (await axios.get<Story[]>(`${API_URL}/project/${projectId}`)).data;
+    }
+
+    static async getById(id: string): Promise<Story>
+    {
+        return (await axios.get<Story>(`${API_URL}/${id}`)).data;
+    }
+
+    static async create(story: Story): Promise<void>
+    {
+        (await axios.post<Story>(API_URL, story)).data;
+    }
+
+    static async update(id: string, story: Story): Promise<void>
+    {
+        (await axios.put<Story>(`${API_URL}/${id}`, story)).data;
+    }
+
+    static async delete(id: string): Promise<void>
+    {
+        (await axios.delete(`${API_URL}/${id}`)).data;
+    }
+}

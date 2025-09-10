@@ -1,4 +1,4 @@
-export type StoryStatus = "todo" | "doing" | "done";
+export type StoryState = "todo" | "doing" | "done";
 export type StoryPriority = "niski" | "średni" | "wysoki";
 
 export interface Story 
@@ -7,8 +7,8 @@ export interface Story
   name: string;
   description: string;
   priority: StoryPriority;
-  projectId: string;
+  project: string;
   createdAt: string;
-  status: StoryStatus;
-  ownerId: string;
+  state: StoryState;
+  owner: string;
 }

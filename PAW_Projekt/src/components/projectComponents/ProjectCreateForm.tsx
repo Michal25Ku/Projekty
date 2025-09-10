@@ -11,13 +11,16 @@ export function ProjectCreateForm({ onCreate }: ProjectCreateFormProps)
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
 
-    const handleCreate = () => {
-        if (!name.trim()) {
+    const handleCreate = () => 
+    {
+        if (!name.trim()) 
+        {
             alert("Pole 'Nazwa projektu' jest wymagane!");
             return;
         }
 
-        const newProject: Project = {
+        const newProject: Project = 
+        {
             name,
             description,
         };

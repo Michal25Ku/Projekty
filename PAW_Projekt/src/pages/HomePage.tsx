@@ -4,14 +4,16 @@ import { ProjectApi } from "../api/ProjectApi";
 import "../index.css";
 import { ProjectCreateForm } from "../components/projectComponents/ProjectCreateForm";
 import { ProjectList } from "../components/projectComponents/ProjectList";
+import { ProjectEditForm } from "../components/projectComponents/ProjectEditForm";
 
-export default function Home() 
+export default function HomePage() 
 {
     const [projects, setProjects] = useState<Project[]>([]);
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
 
     useEffect(() =>
     {
-        const fetchProject= async () =>
+        const fetchProject = async () =>
         {
             try
             {
@@ -27,13 +29,18 @@ export default function Home()
         fetchProject();
     }, []);
 
+    const refreshProjects = async () => 
+    {
+        const updatedProjects = await ProjectApi.getAll();
+        setProjects(updatedProjects);
+    };
+
     const handleDelete = async (id: string) => 
     {
         try 
         {
             await ProjectApi.delete(id);
-            const updatedProjects = await ProjectApi.getAll();
-            setProjects(updatedProjects);
+            await refreshProjects();
         } 
         catch (err) 
         {
@@ -46,8 +53,7 @@ export default function Home()
         try 
         {
             await ProjectApi.create(project);
-            const updatedProjects = await ProjectApi.getAll();
-            setProjects(updatedProjects);
+            await refreshProjects();
         } 
         catch (err) 
         {
@@ -60,8 +66,8 @@ export default function Home()
         try 
         {
             await ProjectApi.update(id, project);
-            const updatedProjects = await ProjectApi.getAll();
-            setProjects(updatedProjects);
+            await refreshProjects();
+            setEditingProject(null);
         } 
         catch (err) 
         {
@@ -72,9 +78,12 @@ export default function Home()
     return (
     <div className="p-6">
         <h1 className="text-2xl mb-4">ManagMe</h1>
-        <ProjectCreateForm onCreate={handleCreate}/>
+        {editingProject ? 
+        (
+            <ProjectEditForm projectId = {editingProject._id!} onEdit={handleEdit} onCancel={() => setEditingProject(null)} onDelete={handleDelete}/>
+        ) : <ProjectCreateForm onCreate = {handleCreate}/>}
 
-        <ProjectList projects={projects} onDelete={handleDelete} />
+        <ProjectList projects={projects} onEdit={setEditingProject} />
     </div>
   );
 }

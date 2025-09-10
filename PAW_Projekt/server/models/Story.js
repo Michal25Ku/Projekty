@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const StorySchema = new mongoose.Schema({
+const StorySchema = new mongoose.Schema(
+{
   name: { type: String, required: true },
   description: { type: String },
   priority: { type: String, enum: ['niski', 'średni', 'wysoki'], default: 'średni' },

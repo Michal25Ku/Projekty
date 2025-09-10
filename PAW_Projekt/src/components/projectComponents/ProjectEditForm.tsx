@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { ProjectApi } from "../../api/ProjectApi";
 import type { Project } from "../../models/Project";
-import { Link, useNavigate } from "react-router-dom";
 
 interface ProjectEditFormProps 
 {
     projectId: string;
+    onEdit: (projectId: string, project: Project) => void
+    onCancel: () => void;
+    onDelete: (projectId: string) => void
 }
 
-export function ProjectCreateForm({ projectId }: ProjectEditFormProps) 
+export function ProjectEditForm({ projectId, onEdit, onCancel, onDelete }: ProjectEditFormProps) 
 {
     const [project, setProject] = useState<Project | null>(null);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const navigate = useNavigate();
 
     useEffect(() =>
     {
@@ -38,33 +39,30 @@ export function ProjectCreateForm({ projectId }: ProjectEditFormProps)
         }
     }, [projectId]);
 
-
-    const handleSave = async () => 
+    const handleEdit = () => 
     {
-        if (!project) 
-            return;
-
-        const updated: Project = 
+        if (!name.trim()) 
         {
-            ...project,
+            alert("Pole 'Nazwa projektu' jest wymagane!");
+            return;
+        }
+
+        const updatedProject: Project = 
+        {
+            ... project,
             name,
             description,
         };
 
-        try 
-        {
-            await ProjectApi.update(projectId, updated);
-            navigate(`/project`);
-        }
-        catch (err) 
-        {
-            console.error("Błąd podczas zapisywania projektu:", err);
-        } 
+        onEdit(projectId, updatedProject);
+
+        setName("");
+        setDescription("");
     };
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl mb-4">Stwórz projekt</h1>
+            <h1 className="text-2xl mb-4">Edytuj projekt</h1>
             <div className="mb-4">
                 <input
                 className="border p-2 mr-2"
@@ -78,12 +76,15 @@ export function ProjectCreateForm({ projectId }: ProjectEditFormProps)
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 />
-                <button onClick={handleSave} className="button button-create">
+                <button onClick={handleEdit} className="button button-create">
                     Zapisz
                 </button>
-                <Link to = {`/project`} className="button button-create">
-                    Wróc
-                </Link>
+                <button onClick={onCancel} className="button button-cancel">
+                    Cofnij
+                </button>
+                <button onClick={() => {onDelete(projectId); onCancel();}} className="button button-cancel">
+                    Usuń
+                </button>
             </div>
         </div>
     );

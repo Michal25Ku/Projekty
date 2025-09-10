@@ -9,7 +9,7 @@ import * as TaskApi from "../api/TaskApi";
 import * as UserApi from "../api/UserApi";
 import * as StoryApi from "../api/StoryApi";
 
-export default function EditTask() {
+export default function TaskPage() {
     const { projectId, taskId } = useParams<{ projectId: string; taskId: string }>();
     const navigate = useNavigate();
 
