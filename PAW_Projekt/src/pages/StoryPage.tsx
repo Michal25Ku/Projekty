@@ -6,6 +6,7 @@ import { StoryCreateForm } from "../components/storyComponents/StoryCreateForm";
 import { StoryEditForm } from "../components/storyComponents/StoryEditForm";
 import { getMockUserId } from "../helpers/MockUser";
 import { StoryCanban } from "../components/storyComponents/StoryCanban";
+import "../index.css";
 
 
 export default function StoryPage() 
@@ -87,15 +88,15 @@ export default function StoryPage()
 
     return (
         <div className="p-6">
-        {editingStory ? 
-        (
-            <StoryEditForm storyId = {editingStory._id!} onEdit={handleEdit} onCancel={() => setEditingStory(null)} onDelete={handleDelete}/>
-        ) : <StoryCreateForm onCreate={handleCreate} projectId={projectId!} currentUserId={currentUserId}/>}
-        <Link to = {`/project`} className="button button-create">
-            Cofnij do projektów
-        </Link>
+            <Link to = {`/project`} className="button button-link">
+                Cofnij do projektów
+            </Link>
+            {editingStory ? 
+            (
+                <StoryEditForm storyId = {editingStory._id!} onEdit={handleEdit} onCancel={() => setEditingStory(null)} onDelete={handleDelete}/>
+            ) : <StoryCreateForm onCreate={handleCreate} projectId={projectId!} currentUserId={currentUserId}/>}
 
-        <StoryCanban stories={stories} onEdit={setEditingStory} />
+            <StoryCanban stories={stories} onEdit={setEditingStory} />
         </div>
     );
 }

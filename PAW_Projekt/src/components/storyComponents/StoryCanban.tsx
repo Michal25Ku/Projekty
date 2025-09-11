@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Story, StoryState } from "../../models/Story";
+import { formatDate } from "../../helpers/DateHelper";
 
 interface StaryCanbanProps
 {
@@ -10,7 +11,7 @@ interface StaryCanbanProps
 export function StoryCanban({onEdit, stories} : StaryCanbanProps) 
 {
     const renderColumn = (state: StoryState, title: string) => (
-        <div>
+        <div className="kanban-column">
             <h3 className="font-bold mb-2">{title}</h3>
             {stories
                 .filter((s) => s.state === state)
@@ -23,7 +24,7 @@ export function StoryCanban({onEdit, stories} : StaryCanbanProps)
     return (
         <div className="p-6">
             <h2 className="text-xl mt-6 mb-2">Story projektu</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="kanban-container">
                 {renderColumn("todo", "Todo")}
                 {renderColumn("doing", "Doing")}
                 {renderColumn("done", "Done")}
@@ -35,15 +36,16 @@ export function StoryCanban({onEdit, stories} : StaryCanbanProps)
 function StoryItem({ story, onEdit } : {story: Story, onEdit: (story: Story) => void}) 
 {
     return (
-        <div className="border p-2 mb-2 rounded bg-white shadow">
+        <div className="kanban-item">
             <p className="font-bold">{story.name}</p>
             <p>{story.description}</p>
             <p className="text-sm">Priorytet: {story.priority}</p>
+            <p className="text-sm">Data utworzenia: {formatDate(story.createdAt)}</p>
             <div className="mt-2 flex gap-2">
                 <button onClick={() => onEdit(story)} className="button button-edit mr-2">
                     Edytuj
                 </button>
-                <Link to = {`/project/${story.project}/story/${story._id}/task`} className="button button-create">
+                <Link to = {`/project/${story.project}/story/${story._id}/task`} className="button button-link">
                     Zadania historyjki
                 </Link>
             </div>

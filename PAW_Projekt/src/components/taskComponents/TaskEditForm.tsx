@@ -105,87 +105,110 @@ export function TaskEditForm({ taskId, onEdit, onCancel, onDelete, users } : Tas
             <h1 className="text-2xl mb-4">Edytuj historyjkę</h1>
 
                 <div className="mb-4">
-                    <input
-                        className="border p-2 mr-2"
-                        value={name}
-                        onChange={(e) => setName( e.target.value )}
-                    />
-                    <input
-                        className="border p-2 mr-2"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <input
-                        type="number"
-                        min={1}
-                        className="border p-2 mr-2 w-32"
-                        value={estimatedTime}
-                        onChange={(e) => setEstimatedTime(Number(e.target.value))}
-                    />
-                    <select
-                        className="border p-2 mr-2"
-                        value={assignedUser}
-                        onChange={(e) => setAssignedUser(e.target.value)}
-                    >
-                        <option value="">Wybierz użytkownika</option>
-                        {users.map((user) => (
-                            <option key={user._id} value={user._id}>
-                                {user.name} {user.surname} ({user.role})
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        className="border p-2 mr-2"
-                        value={state}
-                        disabled
-                        onChange={(e) => setState(e.target.value as TaskState)}
-                    >
-                        <option value="todo">Todo</option>
-                        <option value="doing">Doing</option>
-                        <option value="done">Done</option>
-                    </select>
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Nazwa zadania: </label>
+                        <input
+                            className="border p-2 mr-2"
+                            value={name}
+                            onChange={(e) => setName( e.target.value )}
+                        />
+                    </div>
 
-                    {state === "todo" && (
-                        <>
-                            <button onClick={handleStartTask} className="button button-save mr-2">
-                                Rozpocznij zadanie
-                            </button>
-                            <button onClick={() => handleEdit()} className="button button-save mr-2">
-                                Zapisz
-                            </button>
-                            <button onClick={() => { onDelete(taskId); onCancel(); }} className="button button-save mr-2">
-                                Usuń
-                            </button>
-                            <button onClick={onCancel} className="button button-cancel mr-2">
-                                Cofnij
-                            </button>
-                        </>
-                    )}
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Opis zadania: </label>
+                        <input
+                            className="border p-2 mr-2"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
 
-                    {state === "doing" && (
-                        <>
-                            <button onClick={handleEndTask} className="button button-save mr-2">
-                                Zakończ zadanie
-                            </button>
-                            <button onClick={() => handleEdit()} className="button button-save mr-2">
-                                Zapisz
-                            </button>
-                            <button onClick={() => { onDelete(taskId); onCancel(); }} className="button button-save mr-2">
-                                Usuń
-                            </button>
-                            <button onClick={onCancel} className="button button-cancel mr-2">
-                                Cofnij
-                            </button>
-                        </>
-                    )}
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Przewidywany czas (h): </label>
+                        <input
+                            type="number"
+                            min={1}
+                            className="border p-2 mr-2 w-32"
+                            value={estimatedTime}
+                            onChange={(e) => setEstimatedTime(Number(e.target.value))}
+                        />
+                    </div>
 
-                    {state === "done" && (
-                        <>
-                            <button onClick={onCancel} className="button button-cancel mr-2">
-                                Cofnij
-                            </button>
-                        </>
-                    )}
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Przypisany użytkownik: </label>
+                        <select
+                            className="border p-2 mr-2"
+                            value={assignedUser}
+                            onChange={(e) => setAssignedUser(e.target.value)}
+                        >
+                            <option value="">-- Wybierz użytkownika --</option>
+                            {users
+                                .filter(user => user.role === "developer" || user.role === "devops")
+                                .map((user) => (
+                                <option key={user._id} value={user._id}>
+                                    {user.firstName} {user.lastName} ({user.role})
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Status: </label>
+                        <select
+                            className="border p-2 mr-2"
+                            value={state}
+                            disabled
+                            onChange={(e) => setState(e.target.value as TaskState)}
+                        >
+                            <option value="todo">Todo</option>
+                            <option value="doing">Doing</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-2">
+                        {state === "todo" && (
+                            <>
+                                <button onClick={handleStartTask} className="button button-start mr-2">
+                                    Rozpocznij zadanie
+                                </button>
+                                <button onClick={() => handleEdit()} className="button button-save mr-2">
+                                    Zapisz
+                                </button>
+                                <button onClick={onCancel} className="button button-cancel mr-2">
+                                    Cofnij
+                                </button>
+                                <button onClick={() => { onDelete(taskId); onCancel(); }} className="button button-delete">
+                                    Usuń
+                                </button>
+                            </>
+                        )}
+
+                        {state === "doing" && (
+                            <>
+                                <button onClick={handleEndTask} className="button button-end mr-2">
+                                    Zakończ zadanie
+                                </button>
+                                <button onClick={() => handleEdit()} className="button button-save mr-2">
+                                    Zapisz
+                                </button>
+                                <button onClick={onCancel} className="button button-cancel mr-2">
+                                    Cofnij
+                                </button>
+                                <button onClick={() => { onDelete(taskId); onCancel(); }} className="button button-delete">
+                                    Usuń
+                                </button>
+                            </>
+                        )}
+
+                        {state === "done" && (
+                            <>
+                                <button onClick={onCancel} className="button button-cancel mr-2">
+                                    Cofnij
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
         </div>
     );

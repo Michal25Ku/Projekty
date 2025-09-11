@@ -45,28 +45,42 @@ export function StoryCreateForm({onCreate, projectId, currentUserId} : StoryCrea
             <h1 className="text-2xl mb-4">Stwórz historyjkę</h1>
 
                 <div className="mb-4">
-                    <input
-                        className="border p-2 mr-2"
-                        value={name}
-                        onChange={(e) => setName( e.target.value )}
-                    />
-                    <input
-                        className="border p-2 mr-2"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <select
-                        className="border p-2 mr-2"
-                        value={priority}
-                        onChange={(e) =>setPriority(e.target.value as "niski" | "średni" | "wysoki")}
-                    >
-                        <option value="niski">Niski</option>
-                        <option value="średni">Średni</option>
-                        <option value="wysoki">Wysoki</option>
-                    </select>
-                    <button onClick={() => handleCreate()} className="button button-save mr-2">
-                        Dodaj
-                    </button>
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Nazwa historyjki: </label>
+                        <input
+                            className="border p-2 mr-2"
+                            value={name}
+                            onChange={(e) => setName( e.target.value )}
+                        />
+                    </div>
+
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Opis historyjki: </label>
+                        <input
+                            className="border p-2 mr-2"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="mb-2">
+                    <label className="w-32 font-medium">Priorytet: </label>
+                        <select
+                            className="border p-2 mr-2"
+                            value={priority}
+                            onChange={(e) =>setPriority(e.target.value as "niski" | "średni" | "wysoki")}
+                        >
+                            <option value="niski">Niski</option>
+                            <option value="średni">Średni</option>
+                            <option value="wysoki">Wysoki</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-2">
+                        <button onClick={() => handleCreate()} className="button button-create">
+                            Dodaj
+                        </button>
+                    </div>
                 </div>
         </div>
     );

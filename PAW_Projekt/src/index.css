@@ -1,3 +1,80 @@
+/* -------------------- Ogólne style -------------------- */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9fafb;
+  color: #111827;
+}
+
+/* Kontener z paddingiem */
+.p-6 {
+  padding: 1.5rem;
+}
+
+/* Nagłówki */
+.text-2xl {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* Margines dolny */
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 1rem;
+}
+
+/* -------------------- Inputy -------------------- */
+input {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* -------------------- Tabela -------------------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid #d1d5db;
+}
+
+.button-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  background-color: #10b981; /* zielony kolor */
+  color: white;
+  text-decoration: none; /* usuwa podkreślenie linku */
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+  font-family: Arial, sans-serif; /* wymuszenie tej samej czcionki co w body */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button-link:hover {
+  background-color: #059669; /* ciemniejszy zielony przy hover */
+}
+
 /* -------------------- Przyciski ogólne -------------------- */
 button,
 .button {
@@ -18,20 +95,20 @@ button,
 /* -------------------- Specyficzne style przycisków -------------------- */
 /* Cofnij / Cancel */
 .button-cancel {
-  background-color: #ef4444;
+  background-color: #f3cd34;
 }
 
 .button-cancel:hover {
-  background-color: #dc2626;
+  background-color: #b99a3c;
 }
 
 /* Dodaj / Create */
 .button-create {
-  background-color: #3b82f6;
+  background-color: #10b981;
 }
 
 .button-create:hover {
-  background-color: #2563eb;
+  background-color: #059669;
 }
 
 /* Zapisz / Save */
@@ -64,21 +141,21 @@ button,
 
 /* Przejdź / Navigate / Link */
 .button-link {
-  background-color: #10b981; /* zielony */
+  background-color: #3b82f6; /* zielony */
 }
 
 .button-link:hover {
-  background-color: #059669;
+  background-color: #2563eb;
 }
 
 /* -------------------- Przyciski specyficzne do TaskEditForm -------------------- */
 /* Rozpocznij zadanie */
 .button-start {
-  background-color: #3b82f6; /* niebieski */
+  background-color: #10b981; /* niebieski */
 }
 
 .button-start:hover {
-  background-color: #2563eb;
+  background-color: #059669;
 }
 
 /* Zakończ zadanie */
@@ -97,4 +174,77 @@ button,
 
 .mr-2 {
   margin-right: 0.5rem;
+}
+
+/* -------------------- Pola wyboru -------------------- */
+select {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  background: white;
+  color: #111827;
+  outline: none;
+  cursor: pointer;
+}
+
+select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Opcjonalnie wyrównanie strzałki dla wszystkich przeglądarek */
+select::-ms-expand {
+  display: none;
+}
+
+.kanban-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 kolumny */
+  gap: 1rem; /* odstęp między kolumnami */
+}
+
+.kanban-column {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db; /* ramka całej kolumny */
+}
+
+.kanban-column h3 {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.kanban-item {
+  background: white;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #d1d5db; /* linia oddzielająca elementy */
+}
+
+.kanban-item:last-child {
+  border-bottom: none; /* ostatni element bez dolnej linii */
+}
+
+.kanban-item p {
+  margin: 0.25rem 0;
+}
+
+.kanban-item.editing {
+  background-color: #fef3c7; /* jasny pomarańczowy odcień */
+  border-left: 4px solid #f59e0b; /* dodatkowy akcent po lewej */
+}
+
+.app-header {
+    padding: 1rem;
+    background-color: #dbeafe; /* odpowiada Tailwind bg-blue-100 */
+    color: #1e3a8a; /* odpowiada Tailwind text-blue-900 */
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.font-bold {
+    font-weight: bold;
 }

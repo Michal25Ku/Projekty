@@ -35,21 +35,32 @@ export function ProjectCreateForm({ onCreate }: ProjectCreateFormProps)
         <div className="p-6">
             <h1 className="text-2xl mb-4">Stwórz projekt</h1>
             <div className="mb-4">
-                <input
-                className="border p-2 mr-2"
-                placeholder="Nazwa projektu"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                />
-                <input
-                className="border p-2 mr-2"
-                placeholder="Opis projektu"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                />
-                <button onClick={() => handleCreate()} className="button button-create">
-                    Utwórz
-                </button>
+                <div className="mb-2">
+                    <label className="w-32 font-medium">Nazwa projektu: </label>
+                    <input
+                        className="border p-2 mr-2"
+                        placeholder="Nazwa projektu"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                    />
+                </div>
+
+                <div className="mb-2">
+                    <label className="w-32 font-medium">Opis projektu: </label>
+                    <input
+                        className="border p-2 mr-2"
+                        placeholder="Opis projektu"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                    />
+                </div>
+
+
+                <div className="mb-2">
+                    <button onClick={() => handleCreate()} className="button button-create">
+                        Utwórz
+                    </button>
+                </div>
             </div>
         </div>
     );

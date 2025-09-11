@@ -64,27 +64,37 @@ export function ProjectEditForm({ projectId, onEdit, onCancel, onDelete }: Proje
         <div className="p-6">
             <h1 className="text-2xl mb-4">Edytuj projekt</h1>
             <div className="mb-4">
-                <input
-                className="border p-2 mr-2"
-                placeholder="Nazwa projektu"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                />
-                <input
-                className="border p-2 mr-2"
-                placeholder="Opis projektu"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                />
-                <button onClick={handleEdit} className="button button-create mr-2">
-                    Zapisz
-                </button>
-                <button onClick={onCancel} className="button button-cancel mr-2">
-                    Cofnij
-                </button>
-                <button onClick={() => {onDelete(projectId); onCancel();}} className="button button-cancel">
-                    Usuń
-                </button>
+                <div className="mb-2">
+                <label className="w-32 font-medium">Nazwa projektu: </label>
+                    <input
+                        className="border p-2 mr-2"
+                        placeholder="Nazwa projektu"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                    />
+                </div>
+
+                <div className="mb-2">
+                    <label className="w-32 font-medium">Opis projektu: </label>
+                    <input
+                        className="border p-2 mr-2"
+                        placeholder="Opis projektu"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                    />
+                </div>
+
+                <div className="mb-2">
+                    <button onClick={handleEdit} className="button button-create mr-2">
+                        Zapisz
+                    </button>
+                    <button onClick={onCancel} className="button button-cancel mr-2">
+                        Cofnij
+                    </button>
+                    <button onClick={() => {onDelete(projectId); onCancel();}} className="button button-delete">
+                        Usuń
+                    </button>
+                </div>
             </div>
         </div>
     );

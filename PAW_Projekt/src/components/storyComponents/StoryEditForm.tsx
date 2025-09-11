@@ -77,43 +77,61 @@ export function StoryEditForm({ storyId, onEdit, onCancel, onDelete } : StoryEdi
             <h1 className="text-2xl mb-4">Edytuj historyjkę</h1>
 
                 <div className="mb-4">
-                    <input
-                        className="border p-2 mr-2"
-                        value={name}
-                        onChange={(e) => setName( e.target.value )}
-                    />
-                    <input
-                        className="border p-2 mr-2"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <select
-                        className="border p-2 mr-2"
-                        value={priority}
-                        onChange={(e) =>setPriority(e.target.value as "niski" | "średni" | "wysoki")}
-                    >
-                        <option value="niski">Niski</option>
-                        <option value="średni">Średni</option>
-                        <option value="wysoki">Wysoki</option>
-                    </select>
-                    <select
-                        className="border p-2 mr-2"
-                        value={state}
-                        onChange={(e) =>setState(e.target.value as "todo" | "doing" | "done")}
-                    >
-                        <option value="todo">Todo</option>
-                        <option value="doing">Doing</option>
-                        <option value="done">Done</option>
-                    </select>
-                    <button onClick={handleEdit} className="button button-save mr-2">
-                        Zapisz
-                    </button>
-                    <button onClick={onCancel} className="button button-cancel mr-2">
-                        Cofnij
-                    </button>
-                    <button onClick={() => {onDelete(storyId); onCancel();}} className="button button-save mr-2">
-                        Usuń
-                    </button>
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Nazwa historyjki: </label>
+                        <input
+                            className="border p-2 mr-2"
+                            value={name}
+                            onChange={(e) => setName( e.target.value )}
+                        />
+                    </div>
+
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Opis historyjki: </label>
+                        <input
+                            className="border p-2 mr-2"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Priorytet: </label>
+                        <select
+                            className="border p-2 mr-2"
+                            value={priority}
+                            onChange={(e) =>setPriority(e.target.value as "niski" | "średni" | "wysoki")}
+                        >
+                            <option value="niski">Niski</option>
+                            <option value="średni">Średni</option>
+                            <option value="wysoki">Wysoki</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-2">
+                        <label className="w-32 font-medium">Status: </label>
+                        <select
+                            className="border p-2 mr-2"
+                            value={state}
+                            onChange={(e) =>setState(e.target.value as "todo" | "doing" | "done")}
+                        >
+                            <option value="todo">Todo</option>
+                            <option value="doing">Doing</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-2">
+                        <button onClick={handleEdit} className="button button-save mr-2">
+                            Zapisz
+                        </button>
+                        <button onClick={onCancel} className="button button-cancel mr-2">
+                            Cofnij
+                        </button>
+                        <button onClick={() => {onDelete(storyId); onCancel();}} className="button button-delete">
+                            Usuń
+                        </button>
+                    </div>
                 </div>
         </div>
     );

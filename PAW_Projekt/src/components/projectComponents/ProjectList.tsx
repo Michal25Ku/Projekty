@@ -39,7 +39,7 @@ function ProjectRow({project, onEdit}: {project: Project, onEdit: (project: Proj
                 <button onClick={() => onEdit(project)} className="button button-edit mr-2">
                     Edytuj
                 </button>
-                <Link to = {`/project/${project._id}/story`} className="button button-create">
+                <Link to = {`/project/${project._id}/story`} className="button button-link">
                     Historyjki projektu
                 </Link>
             </td>

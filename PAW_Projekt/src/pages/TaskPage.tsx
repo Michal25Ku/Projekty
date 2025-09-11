@@ -7,6 +7,7 @@ import { TaskCreateForm } from "../components/taskComponents/TaskCreateForm";
 import { TaskApi } from "../api/TaskApi";
 import { UserApi } from "../api/UserApi";
 import { TaskEditForm } from "../components/taskComponents/TaskEditForm";
+import "../index.css";
 
 export default function TaskPage() 
 {
@@ -84,15 +85,15 @@ export default function TaskPage()
 
     return (
         <div className="p-6">
-        {editingTask ? 
-        (
-            <TaskEditForm taskId={editingTask._id!} onEdit={handleEdit} onCancel={() => setEditingTask(null)} onDelete={handleDelete} users={users}/>
-        ) : <TaskCreateForm onCreate={handleCreate} storyId={storyId!}/>}
-        <Link to = {`/project/${projectId}/story`} className="button button-create">
-            Cofnij do historyjek
-        </Link>
+            <Link to = {`/project/${projectId}/story`} className="button button-link">
+                Cofnij do historyjek
+            </Link>
+            {editingTask ? 
+            (
+                <TaskEditForm taskId={editingTask._id!} onEdit={handleEdit} onCancel={() => setEditingTask(null)} onDelete={handleDelete} users={users}/>
+            ) : <TaskCreateForm onCreate={handleCreate} storyId={storyId!}/>}
 
-        <TaskCanban tasks={tasks} onEdit={setEditingTask} />
+            <TaskCanban tasks={tasks} onEdit={setEditingTask} />
         </div>
     );
 }
