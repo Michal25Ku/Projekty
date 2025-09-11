@@ -7,7 +7,7 @@ interface StaryCanbanProps
     stories: Story[];
 }
 
-export default function StoryCanban({onEdit, stories} : StaryCanbanProps) 
+export function StoryCanban({onEdit, stories} : StaryCanbanProps) 
 {
     const renderColumn = (state: StoryState, title: string) => (
         <div>
@@ -40,7 +40,7 @@ function StoryItem({ story, onEdit } : {story: Story, onEdit: (story: Story) => 
             <p>{story.description}</p>
             <p className="text-sm">Priorytet: {story.priority}</p>
             <div className="mt-2 flex gap-2">
-                <button onClick={() => onEdit(story)} className="button button-delete">
+                <button onClick={() => onEdit(story)} className="button button-edit mr-2">
                     Edytuj
                 </button>
                 <Link to = {`/project/${story.project}/story/${story._id}/task`} className="button button-create">

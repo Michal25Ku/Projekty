@@ -1,116 +1,100 @@
-/* -------------------- Ogólne style -------------------- */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f9fafb;
-  color: #111827;
-}
-
-/* Kontener z paddingiem */
-.p-6 {
-  padding: 1.5rem;
-}
-
-/* Nagłówki */
-.text-2xl {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-/* Margines dolny */
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
-/* -------------------- Inputy -------------------- */
-input {
-  border: 1px solid #d1d5db;
-  padding: 0.5rem;
-  margin-right: 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.9rem;
-  outline: none;
-}
-
-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-}
-
-/* -------------------- Tabela -------------------- */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
-
-th, td {
-  padding: 0.5rem;
-  text-align: left;
-  border: 1px solid #d1d5db;
-}
-
-/* -------------------- Przyciski -------------------- */
+/* -------------------- Przyciski ogólne -------------------- */
 button,
 .button {
   display: inline-block;
-  padding: 0.5rem 1rem;   /* px-4 py-2 */
+  padding: 0.5rem 1rem; /* px-4 py-2 */
   border-radius: 0.25rem;
-  color: white;
-  text-align: center;
   font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
   font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  outline: none;
+  border: none;
+  color: white;
 }
 
-/* Create / Utwórz */
-.button-create {
-  background-color: #3b82f6; /* niebieski */
-}
-
-.button-create:hover {
-  background-color: #2563eb;
-}
-
-/* Edit / Edytuj */
-.button-edit {
-  background-color: #facc15; /* żółty */
-  color: #111827; /* kontrast przy żółtym */
-}
-
-.button-edit:hover {
-  background-color: #eab308;
-}
-
-/* Delete / Usuń */
-.button-delete {
-  background-color: #ef4444; /* czerwony */
-}
-
-.button-delete:hover {
-  background-color: #dc2626;
-}
-
-.button-save {
-  background-color: #3b82f6; /* niebieski jak Create */
-}
-
-.button-save:hover {
-  background-color: #2563eb;
-}
-
+/* -------------------- Specyficzne style przycisków -------------------- */
+/* Cofnij / Cancel */
 .button-cancel {
-  background-color: #ef4444; /* czerwony jak Delete */
+  background-color: #ef4444;
 }
 
 .button-cancel:hover {
   background-color: #dc2626;
 }
 
+/* Dodaj / Create */
+.button-create {
+  background-color: #3b82f6;
+}
+
+.button-create:hover {
+  background-color: #2563eb;
+}
+
+/* Zapisz / Save */
+.button-save {
+  background-color: #3b82f6;
+}
+
+.button-save:hover {
+  background-color: #2563eb;
+}
+
+/* Usuń / Delete */
+.button-delete {
+  background-color: #ef4444;
+}
+
+.button-delete:hover {
+  background-color: #dc2626;
+}
+
+/* Edytuj / Edit */
+.button-edit {
+  background-color: #facc15;
+  color: #111827; /* lepszy kontrast */
+}
+
+.button-edit:hover {
+  background-color: #eab308;
+}
+
+/* Przejdź / Navigate / Link */
+.button-link {
+  background-color: #10b981; /* zielony */
+}
+
+.button-link:hover {
+  background-color: #059669;
+}
+
+/* -------------------- Przyciski specyficzne do TaskEditForm -------------------- */
+/* Rozpocznij zadanie */
+.button-start {
+  background-color: #3b82f6; /* niebieski */
+}
+
+.button-start:hover {
+  background-color: #2563eb;
+}
+
+/* Zakończ zadanie */
+.button-end {
+  background-color: #10b981; /* zielony */
+}
+
+.button-end:hover {
+  background-color: #059669;
+}
+
+/* Małe odstępy między przyciskami */
 .ml-2 {
-  margin-left: 0.5rem; /* mały odstęp między przyciskami */
+  margin-left: 0.5rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
 }

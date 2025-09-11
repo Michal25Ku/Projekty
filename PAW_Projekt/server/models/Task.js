@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const TaskSchema = new mongoose.Schema({
+const TaskSchema = new mongoose.Schema(
+{
   name: { type: String, required: true },
   description: { type: String },
   priority: { type: String, enum: ['niski', 'średni', 'wysoki'], default: 'średni' },
@@ -10,7 +11,7 @@ const TaskSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   startDate: { type: Date },
   endDate: { type: Date },
-  assignedUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  assignedUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null},
 });
 
 module.exports = mongoose.model('Task', TaskSchema);

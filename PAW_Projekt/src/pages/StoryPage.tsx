@@ -1,11 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { StoryApi } from "../api/StoryApi";
 import type { Story } from "../models/Story";
+import { StoryApi } from "../api/StoryApi";
 import { StoryCreateForm } from "../components/storyComponents/StoryCreateForm";
-import StoryCanban from "../components/storyComponents/StoryCanban";
 import { StoryEditForm } from "../components/storyComponents/StoryEditForm";
 import { getMockUserId } from "../helpers/MockUser";
+import { StoryCanban } from "../components/storyComponents/StoryCanban";
+
 
 export default function StoryPage() 
 {
@@ -22,7 +23,7 @@ export default function StoryPage()
 
     useEffect(() =>
     {
-        const fetchStory = async () =>
+        const fetchStories = async () =>
         {
             try
             {
@@ -35,7 +36,7 @@ export default function StoryPage()
             }
         }
 
-        fetchStory();
+        fetchStories();
     }, []);
 
     const refreshStories = async () => 
@@ -53,7 +54,7 @@ export default function StoryPage()
         } 
         catch (err) 
         {
-            console.error("Błąd podczas usuwania projektu:", err);
+            console.error("Błąd podczas usuwania historyjki:", err);
         }
     };
 
@@ -66,7 +67,7 @@ export default function StoryPage()
         } 
         catch (err) 
         {
-            console.error("Błąd podczas dodawania projektu:", err);
+            console.error("Błąd podczas dodawania historyjki:", err);
         }
     };
 
@@ -80,7 +81,7 @@ export default function StoryPage()
         } 
         catch (err) 
         {
-            console.error("Błąd podczas edytowania projektu:", err);
+            console.error("Błąd podczas edytowania historyjki:", err);
         }
     };
 

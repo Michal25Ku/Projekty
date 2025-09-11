@@ -41,6 +41,10 @@ exports.updateStory = async (req, res) =>
 
 exports.deleteStory = async (req, res) => 
 {
-  await Story.findByIdAndDelete(req.params.id);
+  const story = await Story.findById(req.params.id);
+  if (!story) 
+    return res.status(404).json({ message: 'Story not found' });
+  
+  await story.deleteOne();
   res.status(204).end();
 };

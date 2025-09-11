@@ -1,8 +1,10 @@
 const User = require('./models/User');
 
-async function seedUsers() {
+async function seedUsers() 
+{
   const count = await User.countDocuments();
-  if (count === 0) {
+  if (count === 0) 
+  {
     await User.create([
       { firstName: 'Admin', lastName: 'Testowy', role: 'admin' },
       { firstName: 'Dev', lastName: 'Developer', role: 'developer' },

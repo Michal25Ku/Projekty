@@ -1,117 +1,98 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { Task } from "../models/Task";
 import type { User } from "../models/User";
-import type { Story } from "../models/Story";
-import { formatDate } from "../helpers/DateHelper";
+import { TaskCanban } from "../components/taskComponents/TaskCanban";
+import { TaskCreateForm } from "../components/taskComponents/TaskCreateForm";
+import { TaskApi } from "../api/TaskApi";
+import { UserApi } from "../api/UserApi";
+import { TaskEditForm } from "../components/taskComponents/TaskEditForm";
 
-import * as TaskApi from "../api/TaskApi";
-import * as UserApi from "../api/UserApi";
-import * as StoryApi from "../api/StoryApi";
-
-export default function TaskPage() {
-    const { projectId, taskId } = useParams<{ projectId: string; taskId: string }>();
-    const navigate = useNavigate();
-
-    const [task, setTask] = useState<Task | null>(null);
+export default function TaskPage() 
+{
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [users, setUsers] = useState<User[]>([]);
-    const [story, setStory] = useState<Story | null>(null);
 
-    // Pobranie zadania, użytkowników i story
-    useEffect(() => {
-        const fetchData = async () => {
-            if (taskId) {
-                const t = await TaskApi.getByIdTask(taskId);
-                setTask(t);
+    const { storyId, projectId } = useParams<{ storyId: string, projectId: string }>();
 
-                const s = await StoryApi.getByIdStory(t.storyId);
-                setStory(s);
+    useEffect(() =>
+    {
+        const fetchTasks = async () =>
+        {
+            try
+            {
+                const founds = await TaskApi.getByStory(storyId!);
+                setTasks(founds);
+                const allUsers = await UserApi.getAll();
+                setUsers(allUsers);
             }
+            catch (err)
+            {
+                console.error("Błąd podczas pobierania Tasków:", err);
+            }
+        }
 
-            const allUsers = await UserApi.getAllUsers();
-            setUsers(allUsers.filter(u => u.role !== "admin"));
-        };
-        fetchData();
-    }, [taskId]);
+        fetchTasks();
+    }, []);
 
-    // Przypisanie użytkownika
-    const handleAssignUser = (userId: string) => {
-        if (!task) return;
-        setTask({
-            ...task,
-            userId,
-            status: "doing",
-            startDate: task.startDate ?? new Date().toISOString(),
-        });
+    const refreshTasks = async () => 
+    {
+        const updatedTasks = await TaskApi.getByStory(storyId!);
+        setTasks(updatedTasks);
     };
 
-    // Oznaczenie jako zrobione
-    const handleMarkDone = () => {
-        if (!task) return;
-        setTask({
-            ...task,
-            status: "done",
-            endDate: new Date().toISOString(),
-        });
+    const handleDelete = async (id: string) => 
+    {
+        try 
+        {
+            await TaskApi.delete(id);
+            await refreshTasks();
+        } 
+        catch (err) 
+        {
+            console.error("Błąd podczas usuwania zadania:", err);
+        }
     };
 
-    // Zapis zmian do backendu
-    const handleSave = async () => {
-        if (!task) return;
-
-        await TaskApi.updateTask(task._id!, task);
-        navigate(`/project/${projectId}/story/edit/${task.storyId}`);
+    const handleCreate = async (task: Task) => 
+    {
+        try 
+        {
+            await TaskApi.create(task);
+            await refreshTasks();
+        } 
+        catch (err) 
+        {
+            console.error("Błąd podczas dodawania zadania:", err);
+        }
     };
 
-    if (!task) return <p>Zadanie nie znalezione</p>;
+    const handleEdit = async (id: string, task: Task) => 
+    {
+        try 
+        {
+            await TaskApi.update(id, task);
+            await refreshTasks();
+            setEditingTask(null);
+        } 
+        catch (err) 
+        {
+            console.error("Błąd podczas edytowania zadnia:", err);
+        }
+    };
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl mb-4">Szczegóły zadania</h1>
-            <p><b>Nazwa:</b> {task.name}</p>
-            <p><b>Opis:</b> {task.description}</p>
-            <p><b>Historyjka:</b> {story?.name}</p>
-            <p><b>Priorytet:</b> {task.priority}</p>
-            <p><b>Przewidywany czas:</b> {task.estimatedExecutionTime}h</p>
-            <p><b>Status:</b> {task.status}</p>
-            <p><b>Data dodania:</b> {formatDate(task.addDate) ?? "-"}</p>
-            <p><b>Data startu:</b> {formatDate(task.startDate) ?? "-"}</p>
-            <p><b>Data zakończenia:</b> {formatDate(task.endDate) ?? "-"}</p>
-            <p><b>Przypisana osoba:</b> {task.userId
-                ? (() => {
-                    const u = users.find(u => u._id === task.userId);
-                    return u ? `${u.name} ${u.surname}` : "-";
-                  })()
-                : "-"
-            }</p>
+        {editingTask ? 
+        (
+            <TaskEditForm taskId={editingTask._id!} onEdit={handleEdit} onCancel={() => setEditingTask(null)} onDelete={handleDelete} users={users}/>
+        ) : <TaskCreateForm onCreate={handleCreate} storyId={storyId!}/>}
+        <Link to = {`/project/${projectId}/story`} className="button button-create">
+            Cofnij do historyjek
+        </Link>
 
-            <select
-                className="border p-2 mr-2"
-                onChange={(e) => handleAssignUser(e.target.value)}
-                value={task.userId ?? ""}
-            >
-                <option value="">-- przypisz użytkownika --</option>
-                {users.map(u => (
-                    <option key={u._id} value={u._id}>
-                        {u.name} {u.surname} ({u.role})
-                    </option>
-                ))}
-            </select>
-
-            <div className="mt-4">
-                {task.status !== "done" && (
-                    <button className="button button-save mr-2" onClick={handleMarkDone}>
-                        Zadanie wykonano
-                    </button>
-                )}
-
-                <button className="button button-save mr-2" onClick={handleSave}>
-                    Zapisz
-                </button>
-                <button className="button button-cancel" onClick={() => navigate(`/project/${projectId}/story/edit/${task.storyId}`)}>
-                    Anuluj
-                </button>
-            </div>
+        <TaskCanban tasks={tasks} onEdit={setEditingTask} />
         </div>
     );
 }

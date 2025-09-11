@@ -76,10 +76,10 @@ export function ProjectEditForm({ projectId, onEdit, onCancel, onDelete }: Proje
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 />
-                <button onClick={handleEdit} className="button button-create">
+                <button onClick={handleEdit} className="button button-create mr-2">
                     Zapisz
                 </button>
-                <button onClick={onCancel} className="button button-cancel">
+                <button onClick={onCancel} className="button button-cancel mr-2">
                     Cofnij
                 </button>
                 <button onClick={() => {onDelete(projectId); onCancel();}} className="button button-cancel">

@@ -1,4 +1,4 @@
-export type TaskStatus = "todo" | "doing" | "done";
+export type TaskState = "todo" | "doing" | "done";
 export type TaskPriority = "niski" | "średni" | "wysoki";
 
 export interface Task 
@@ -7,11 +7,11 @@ export interface Task
     name: string;
     description: string;
     priority: TaskPriority;
-    storyId: string;
-    estimatedExecutionTime: number;
-    status: TaskStatus;
-    addDate: string;
+    story: string;
+    estimatedTime: number;
+    state: TaskState;
+    createdAt: string;
     startDate?: string;
     endDate?: string;
-    userId?: string;
+    assignedUser?: string;
 }

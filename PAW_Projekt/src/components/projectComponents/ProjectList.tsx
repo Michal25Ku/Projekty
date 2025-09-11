@@ -36,7 +36,7 @@ function ProjectRow({project, onEdit}: {project: Project, onEdit: (project: Proj
             <td className="border p-2">{project.name}</td>
             <td className="border p-2">{project.description}</td>
             <td className="border p-2">
-                <button onClick={() => onEdit(project)} className="button button-delete">
+                <button onClick={() => onEdit(project)} className="button button-edit mr-2">
                     Edytuj
                 </button>
                 <Link to = {`/project/${project._id}/story`} className="button button-create">

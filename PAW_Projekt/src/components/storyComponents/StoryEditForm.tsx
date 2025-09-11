@@ -108,7 +108,7 @@ export function StoryEditForm({ storyId, onEdit, onCancel, onDelete } : StoryEdi
                     <button onClick={handleEdit} className="button button-save mr-2">
                         Zapisz
                     </button>
-                    <button onClick={onCancel} className="button button-save mr-2">
+                    <button onClick={onCancel} className="button button-cancel mr-2">
                         Cofnij
                     </button>
                     <button onClick={() => {onDelete(storyId); onCancel();}} className="button button-save mr-2">

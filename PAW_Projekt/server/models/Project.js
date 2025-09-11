@@ -9,8 +9,16 @@ const ProjectSchema = new mongoose.Schema(
 
 ProjectSchema.pre('deleteOne', { document: true, query: false }, async function(next) 
 {
-  const projectId = this._id;
-  await Story.deleteMany({ project: projectId });
+  await Story.deleteMany({ project: this._id });
+  next();
+});
+
+ProjectSchema.pre('findOneAndDelete', async function(next) 
+{
+  const projectId = this.getQuery()._id;
+  if (projectId) {
+    await Story.deleteMany({ project: projectId });
+  }
   next();
 });
 
