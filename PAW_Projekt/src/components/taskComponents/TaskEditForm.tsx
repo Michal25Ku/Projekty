@@ -60,7 +60,7 @@ export function TaskEditForm({ taskId, onEdit, onCancel, onDelete, users } : Tas
 
         const nextState = newState ?? state;
 
-        if (nextState === "doing" && !assignedUser) 
+        if ((nextState === "doing" || nextState === 'done') && !assignedUser) 
         {
             alert("Zadanie w trakcie musi mieć przypisanego użytkownika!");
             return;
